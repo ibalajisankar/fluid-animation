@@ -10,6 +10,12 @@ function $extend(from, fields) {
 var EReg = function(r,opt) {
 	this.r = new RegExp(r,opt.split("u").join(""));
 };
+const KadimaColors = [[8,58,91],[38,54,99],[94,45,85],[203,60,81]];
+let KadimaActiveColorIndex = Math.floor(Math.random() * 4);
+let last_position={};
+setInterval(() => {
+ KadimaActiveColorIndex = Math.floor(Math.random() * 4);
+}, 400);
 $hxClasses["EReg"] = EReg;
 EReg.__name__ = ["EReg"];
 EReg.prototype = {
@@ -8320,10 +8326,10 @@ hxColorToolkit_spaces_HSB.prototype = {
 		}
 	}
 	,get_hue: function() {
-		return this.getValue(0);
+		return KadimaColors[KadimaActiveColorIndex][0];
 	}
 	,set_hue: function(val) {
-		this.data[0] = hxColorToolkit_spaces_HSB.loop(val,360);
+		this.data[0] = KadimaColors[KadimaActiveColorIndex][0];
 		return val;
 	}
 	,get_saturation: function() {
@@ -8505,10 +8511,12 @@ hxColorToolkit_spaces_HSL.prototype = {
 		}
 	}
 	,get_hue: function() {
+		//console.log(this.getValue(0));
 		return this.getValue(0);
 	}
 	,set_hue: function(val) {
 		this.data[0] = hxColorToolkit_spaces_HSL.loop(val,360);
+		this.data[0] = KadimaColors[KadimaActiveColorIndex][0];
 		return val;
 	}
 	,get_saturation: function() {
@@ -11077,6 +11085,30 @@ snow_core_web_Runtime.prototype = {
 			_gthis.app.input.dispatch_mouse_up_event(Math.floor(_gthis.window_dpr * (_ev4.pageX - _gthis.window_x)),Math.floor(_gthis.window_dpr * (_ev4.pageY - _gthis.window_y)),_ev4.button + 1,window.performance.now() / 1000.0 - snow_core_web_Runtime.timestamp_start,1);
 		});
 		this.window.addEventListener("mousemove",function(_ev5) {
+			let direction;
+		// 	if (typeof(last_position.x) != 'undefined') {
+		// 	 	var deltaX = last_position.x - event.clientX,
+        //     	deltaY = last_position.y - event.clientY;
+		// 		//check which direction had the highest amplitude and then figure out direction by checking if the value is greater or less than zero
+        // 		if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX > 0) {
+		// 	//left
+		// 	direction="left";
+		// } else if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX < 0) {
+		// 	direction="right";
+		// } else if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY > 0) {
+		// 	direction="top";
+        // } else if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY < 0) {
+		// 	direction="bottom";
+        // }
+		// 	}
+		// 	if(last_position.direction !== direction){
+		// 		 KadimaActiveColorIndex = Math.floor(Math.random()*4);
+		// 	}
+		// 	last_position = {
+        // 			x : event.clientX,
+		// 			y : event.clientY,
+		// 			direction : direction
+    	// 		};	
 			var _movement_x = _ev5.movementX == null?0:_ev5.movementX;
 			var _movement_y = _ev5.movementY == null?0:_ev5.movementY;
 			_movement_x = Math.floor(_movement_x * _gthis.window_dpr);
