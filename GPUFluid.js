@@ -13,9 +13,9 @@ var EReg = function(r,opt) {
 const KadimaColors = [[8,58,91],[38,54,99],[94,45,85],[203,60,81]];
 let KadimaActiveColorIndex = Math.floor(Math.random() * 4);
 let last_position={};
-setInterval(() => {
- KadimaActiveColorIndex = Math.floor(Math.random() * 4);
-}, 400);
+// setInterval(() => {
+//  KadimaActiveColorIndex = Math.floor(Math.random() * 4);
+// }, 400);
 $hxClasses["EReg"] = EReg;
 EReg.__name__ = ["EReg"];
 EReg.prototype = {
@@ -4380,6 +4380,7 @@ Main.prototype = $extend(snow_App.prototype,{
 	}
 	,reset: function() {
 		var _this = this.particles;
+		//console.log(Main);
 		var shader = _this.initialPositionShader;
 		var target = _this.positionData;
 		snow_modules_opengl_web_GL.gl.viewport(0,0,target.width,target.height);
@@ -10970,6 +10971,7 @@ snow_core_web_Runtime.prototype = {
 		return true;
 	}
 	,onresize_handler: function(_) {
+		this.app.host.mousePointKnown=false;
 		this.window.style.width = "" + Std.string(window.innerWidth) + "px";
 		this.window.style.height = "" + Std.string(window.innerHeight) + "px";
 	}
@@ -11086,29 +11088,29 @@ snow_core_web_Runtime.prototype = {
 		});
 		this.window.addEventListener("mousemove",function(_ev5) {
 			let direction;
-		// 	if (typeof(last_position.x) != 'undefined') {
-		// 	 	var deltaX = last_position.x - event.clientX,
-        //     	deltaY = last_position.y - event.clientY;
-		// 		//check which direction had the highest amplitude and then figure out direction by checking if the value is greater or less than zero
-        // 		if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX > 0) {
-		// 	//left
-		// 	direction="left";
-		// } else if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX < 0) {
-		// 	direction="right";
-		// } else if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY > 0) {
-		// 	direction="top";
-        // } else if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY < 0) {
-		// 	direction="bottom";
-        // }
-		// 	}
-		// 	if(last_position.direction !== direction){
-		// 		 KadimaActiveColorIndex = Math.floor(Math.random()*4);
-		// 	}
-		// 	last_position = {
-        // 			x : event.clientX,
-		// 			y : event.clientY,
-		// 			direction : direction
-    	// 		};	
+			if (typeof(last_position.x) != 'undefined') {
+			 	var deltaX = last_position.x - _ev5.clientX,
+            	deltaY = last_position.y - _ev5.clientY;
+				//check which direction had the highest amplitude and then figure out direction by checking if the value is greater or less than zero
+        		if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX > 0) {
+			//left
+			direction="left";
+		} else if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX < 0) {
+			direction="right";
+		} else if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY > 0) {
+			direction="top";
+        } else if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY < 0) {
+			direction="bottom";
+        }
+			}
+			if(last_position.direction !== direction){
+				 KadimaActiveColorIndex = Math.floor(Math.random()*4);
+			}
+			last_position = {
+        			x : event.clientX,
+					y : event.clientY,
+					direction : direction
+    			};	
 			var _movement_x = _ev5.movementX == null?0:_ev5.movementX;
 			var _movement_y = _ev5.movementY == null?0:_ev5.movementY;
 			_movement_x = Math.floor(_movement_x * _gthis.window_dpr);
@@ -11116,8 +11118,9 @@ snow_core_web_Runtime.prototype = {
 			_gthis.app.input.dispatch_mouse_move_event(Math.floor(_gthis.window_dpr * (_ev5.pageX - _gthis.window_x)),Math.floor(_gthis.window_dpr * (_ev5.pageY - _gthis.window_y)),_movement_x,_movement_y,window.performance.now() / 1000.0 - snow_core_web_Runtime.timestamp_start,1);
 		});
 		this.window.addEventListener("wheel",function(_ev6) {
+			console.log("wheels");
 			if(_gthis.app.config.runtime.prevent_default_mouse_wheel) {
-				_ev6.preventDefault();
+				//_ev6.preventDefault();
 			}
 			_gthis.app.input.dispatch_mouse_wheel_event(_ev6.deltaX,_ev6.deltaY,window.performance.now() / 1000.0 - snow_core_web_Runtime.timestamp_start,1);
 		});
@@ -11125,6 +11128,8 @@ snow_core_web_Runtime.prototype = {
 			if(_gthis.app.config.runtime.prevent_default_touches) {
 				_ev7.preventDefault();
 			}
+			KadimaActiveColorIndex = Math.floor(Math.random() * 4);
+			
 			var _bound = _gthis.window.getBoundingClientRect();
 			var _g = 0;
 			var _g1 = _ev7.changedTouches;
@@ -11142,6 +11147,8 @@ snow_core_web_Runtime.prototype = {
 			if(_gthis.app.config.runtime.prevent_default_touches) {
 				_ev8.preventDefault();
 			}
+			KadimaActiveColorIndex = Math.floor(Math.random() * 4);
+			
 			var _bound1 = _gthis.window.getBoundingClientRect();
 			var _g2 = 0;
 			var _g11 = _ev8.changedTouches;
@@ -11156,6 +11163,9 @@ snow_core_web_Runtime.prototype = {
 			}
 		});
 		this.window.addEventListener("touchmove",function(_ev9) {
+			//console.log("touchmove");
+			console.log(_ev9);
+			
 			if(_gthis.app.config.runtime.prevent_default_touches) {
 				_ev9.preventDefault();
 			}
@@ -11263,8 +11273,9 @@ snow_core_web_Runtime.prototype = {
 	}
 	,create_window: function() {
 		var config = this.app.config.window;
-		this.window = window.document.createElement("canvas");
+		this.window = document.getElementById("bgcanvas");
 		this.window.className = 'bgCanvas';
+		console.log(this.window);
 		this.window_dpr = window.devicePixelRatio == null?1.0:window.devicePixelRatio;
 		this.window.width = Math.floor(config.width * this.window_dpr);
 		this.window.height = Math.floor(config.height * this.window_dpr);
@@ -11273,8 +11284,8 @@ snow_core_web_Runtime.prototype = {
 		this.window.style.width = config.width + "px";
 		this.window.style.height = config.height + "px";
 		this.window.style.background = "rgba(255,255,255,.1)";
-		this.window.id = this.app.config.runtime.window_id;
-		this.app.config.runtime.window_parent.appendChild(this.window);
+		// this.window.id = this.app.config.runtime.window_id;
+		//this.app.config.runtime.window_parent.appendChild(this.window);
 		if(config.title != null) {
 			window.document.title = config.title;
 		}
@@ -11364,18 +11375,9 @@ snow_core_web_Runtime.prototype = {
 		text_el.style.fontSize = "1.4em";
 		text_el.style.fontFamily = "helvetica,sans-serif";
 		text_el.innerHTML = msg;
-		overlay_el.style.top = "0";
-		overlay_el.style.left = "0";
-		overlay_el.style.width = "100%";
-		overlay_el.style.height = "100%";
-		overlay_el.style.display = "block";
-		overlay_el.style.minWidth = "100%";
-		overlay_el.style.minHeight = "100%";
-		overlay_el.style.textAlign = "center";
-		overlay_el.style.position = "absolute";
-		overlay_el.style.background = "rgba(1,1,1,0.90)";
-		overlay_el.appendChild(text_el);
-		window.document.body.appendChild(overlay_el);
+		
+		//overlay_el.appendChild(text_el);
+		//window.document.body.appendChild(overlay_el);
 		throw new js__$Boot_HaxeError(snow_types_Error.error("runtime / web / failed to create render context, unable to recover"));
 	}
 	,request_frame: function() {
